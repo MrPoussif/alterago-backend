@@ -14,10 +14,7 @@ router.post("/", async (req, res) => {
     const newChallenge = new Challenge({
       name: req.body.name,
       objectif: req.body.objectif,
-      like: 0,
-      "compteur hebdo": 0,
-      "compteur mensuel": 0,
-      "compteur annuel": 0,
+
       users: req.body.users,
     });
 
@@ -70,14 +67,14 @@ router.put("/:id", async (req, res) => {
     challenge.name = req.body.name || challenge.name;
     challenge.objectif = req.body.objectif || challenge.objectif;
     challenge.like = req.body.like || challenge.like;
-    challenge["compteur quotidien"] =
-      req.body["compteur quotidien"] || challenge["compteur quotidien"];
-    challenge["compteur hebdo"] =
-      req.body["compteur hebdo"] || challenge["compteur hebdo"];
-    challenge["compteur mensuel"] =
-      req.body["compteur mensuel"] || challenge["compteur mensuel"];
-    challenge["compteur annuel"] =
-      req.body["compteur annuel"] || challenge["compteur annuel"];
+    challenge["compteur_quotidien"] =
+      req.body["compteur_quotidien"] || challenge["compteur_quotidien"];
+    challenge["compteur_hebdo"] =
+      req.body["compteur_hebdo"] || challenge["compteur_hebdo"];
+    challenge["compteur_mensuel"] =
+      req.body["compteur_mensuel"] || challenge["compteur_mensuel"];
+    challenge["compteur_annuel"] =
+      req.body["compteur_annuel"] || challenge["compteur_annuel"];
 
     const updatedChallenge = await challenge.save();
     res.json({ result: true, challenge: updatedChallenge });
