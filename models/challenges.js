@@ -4,10 +4,10 @@ const challengeSchema = mongoose.Schema({
   name: String,
   objectif: Number,
   like: Number,
-  "compteur quotidien": Number,
-  "compteur hebdo": Number,
-  "compteur mensuel": Number,
-  "compteur annuel": Number,
+  compteur_quotidien: Number,
+  compteur_hebdo: Number,
+  compteur_mensuel: Number,
+  compteur_annuel: Number,
   users: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
 });
 
