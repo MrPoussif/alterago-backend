@@ -1,61 +1,58 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
 
 const User = require("../models/users");
 const { checkBody } = require("../modules/checkBody");
 const uid2 = require("uid2");
 const bcrypt = require("bcrypt");
 
-router.post("/signup", (req, res) => {
+router.post("/signup", async (req, res) => {
   if (!checkBody(req.body, ["username", "password", "email"])) {
-    res.json({ result: false, error: "Missing or empty fields" });
-    return;
+    return res.json({ result: false, error: "Missing or empty fields" });
   }
 
-  User.findOne({ username: req.body.username }).then((data) => {
-    if (data === null) {
-      const hash = bcrypt.hashSync(req.body.password, 10);
+  try {
+    const existingUser = await User.findOne({ username: req.body.username });
 
-      const newUser = new User({
-        username: req.body.username,
-        password: hash,
-        email: req.body.email,
-        token: uid2(32),
-        canBookmark: true,
-      });
-
-      newUser.save().then((newDoc) => {
-        res.json({ result: true, token: newDoc.token });
-      });
-    } else {
-      res.json({ result: false, error: "User already exists" });
+    if (existingUser) {
+      return res.json({ result: false, error: "User already exists" });
     }
-  });
+
+    const hash = bcrypt.hashSync(req.body.password, 10);
+    const newToken = uid2(32);
+
+    const newUser = new User({
+      username: req.body.username,
+      password: hash,
+      email: req.body.email,
+      token: newToken,
+      canBookmark: true,
+    });
+
+    const savedUser = await newUser.save();
+
+    res.json({ result: true, token: savedUser.token });
+  } catch (error) {
+    res.json({ result: false, error: "Server error" });
+  }
 });
 
-router.post("/signin", (req, res) => {
+router.post("/signin", async (req, res) => {
   if (!checkBody(req.body, ["username", "password"])) {
-    res.json({ result: false, error: "Missing or empty fields" });
-    return;
+    return res.json({ result: false, error: "Missing or empty fields" });
   }
 
-  User.findOne({ username: req.body.username }).then((data) => {
-    if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      res.json({ result: true, token: data.token });
+  try {
+    const user = await User.findOne({ username: req.body.username });
+
+    if (user && bcrypt.compareSync(req.body.password, user.password)) {
+      res.json({ result: true, token: user.token });
     } else {
       res.json({ result: false, error: "User not found or wrong password" });
     }
-  });
-});
-
-router.get("/canBookmark/:token", (req, res) => {
-  User.findOne({ token: req.params.token }).then((data) => {
-    if (data) {
-      res.json({ result: true, canBookmark: data.canBookmark });
-    } else {
-      res.json({ result: false, error: "User not found" });
-    }
-  });
+  } catch (error) {
+    res.json({ result: false, error: "Server error" });
+  }
 });
 
 module.exports = router;
