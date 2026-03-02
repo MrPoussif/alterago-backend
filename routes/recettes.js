@@ -3,7 +3,7 @@ var router = express.Router();
 
 const fetch = require("node-fetch");
 
-const myAPIKey = process.env.my_API_Key;
+const myAPIKey = process.env.my_SPOONACULAR_API_Key;
 
 //recette au hasard
 router.get("/random", (req, res) => {
