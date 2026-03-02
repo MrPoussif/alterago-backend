@@ -4,7 +4,7 @@ const router = express.Router();
 const Challenge = require("../models/challenges");
 const { checkBody } = require("../modules/checkBody");
 
-// CREATE - Créer un nouveau challenge
+// Créer un nouveau challenge
 router.post("/", async (req, res) => {
   if (!checkBody(req.body, ["name", "objectif", "users"])) {
     return res.json({ result: false, error: "Missing or empty fields" });
@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// READ - Récupérer tous les challenges
+// Récupérer tous les challenges
 router.get("/", async (req, res) => {
   try {
     const challenges = await Challenge.find();
@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// READ - Récupérer un challenge par son ID
+//  Récupérer un challenge par son ID
 router.get("/:id", async (req, res) => {
   try {
     const challenge = await Challenge.findById(req.params.id);
@@ -51,7 +51,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// UPDATE - Modifier un challenge par son ID
+//  Modifier un challenge par son ID
 router.put("/:id", async (req, res) => {
   if (!checkBody(req.body, ["name", "objectif"])) {
     return res.json({ result: false, error: "Missing or empty fields" });
@@ -83,7 +83,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE - Supprimer un challenge par son ID
+//  Supprimer un challenge par son ID
 router.delete("/:id", async (req, res) => {
   try {
     const challenge = await Challenge.findById(req.params.id);
