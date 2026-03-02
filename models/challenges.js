@@ -4,7 +4,7 @@ const challengeSchema = mongoose.Schema({
   name: String,
   objectif: Number,
   like: Number,
-  "compteur quotidien": Number,
+  "compteur quotidien": { type: Number, default: 0 },
   "compteur hebdo": Number,
   "compteur mensuel": Number,
   "compteur annuel": Number,

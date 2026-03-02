@@ -26,14 +26,13 @@ router.post("/signup", async (req, res) => {
       password: hash,
       email: req.body.email,
       token: newToken,
-      canBookmark: true,
     });
 
     const savedUser = await newUser.save();
 
     res.json({ result: true, token: savedUser.token });
   } catch (error) {
-    res.json({ result: false, error: "Server error" });
+    res.json({ result: false, error: error.message });
   }
 });
 
