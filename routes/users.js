@@ -120,7 +120,7 @@ router.put("/update", async (req, res) => {
   }
 });
 
-// UPDATE - Passer l'utilisateur en premium
+// Passer l'utilisateur en premium
 router.put("/premium", async (req, res) => {
   if (!checkBody(req.body, ["token"])) {
     return res.json({ result: false, error: "Missing or empty fields" });
@@ -141,7 +141,7 @@ router.put("/premium", async (req, res) => {
   }
 });
 
-// READ - Récupérer le profil de l'utilisateur
+// Récupérer le profil de l'utilisateur
 router.get("/:token", async (req, res) => {
   try {
     const user = await User.findOne({ token: req.params.token });
