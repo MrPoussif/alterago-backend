@@ -10,6 +10,8 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var recettesRouter = require("./routes/recettes");
 var challengesRouter = require("./routes/challenges");
+var eventsRouter = require("./routes/events");
+
 var app = express();
 const cors = require("cors");
 app.use(cors());
@@ -24,5 +26,6 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/recettes", recettesRouter);
 app.use("/challenges", challengesRouter);
+app.use("/events", eventsRouter);
 
 module.exports = app;
