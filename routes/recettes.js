@@ -24,58 +24,14 @@ router.get("/random", (req, res) => {
     });
 });
 
-//recette végétarienne au hasard
-router.get("/randomVegetarian", (req, res) => {
+//recette au hasard suivant régime alimentaire
+router.get("/random/:diet", (req, res) => {
   fetch(
-    `https://api.spoonacular.com/recipes/random?diet=vegetarian&number=1&apiKey=${myAPIKey}`,
+    `https://api.spoonacular.com/recipes/random?diet=${req.params.diet}&number=1&apiKey=${myAPIKey}`,
   )
     .then((response) => response.json())
     .then((data) => {
-      console.log("data reccupérée => ", data);
-      res.json({
-        // recette: data,
-        recette: {
-          image: data.recipes[0].image,
-          title: data.recipes[0].title,
-          duration: data.recipes[0].readyInMinutes,
-          ingredients: data.recipes[0].extendedIngredients,
-          instructions: data.recipes[0].analyzedInstructions,
-        },
-      });
-      return data;
-    });
-});
-
-//recette sans gluten au hasard
-router.get("/randomGlutenFree", (req, res) => {
-  fetch(
-    `https://api.spoonacular.com/recipes/complexSearch?diet=glutenfree&number=1&apiKey=${myAPIKey}`,
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("data reccupérée => ", data);
-      res.json({
-        // recette: data,
-        recette: {
-          image: data.recipes[0].image,
-          title: data.recipes[0].title,
-          duration: data.recipes[0].readyInMinutes,
-          ingredients: data.recipes[0].extendedIngredients,
-          instructions: data.recipes[0].analyzedInstructions,
-        },
-      });
-      return data;
-    });
-});
-
-//recette vegan au hasard
-router.get("/randomVegan", (req, res) => {
-  fetch(
-    `https://api.spoonacular.com/recipes/complexSearch?diet=vegan&number=1&apiKey=${myAPIKey}`,
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("data reccupérée => ", data);
+      console.log("data récupérée => ", data);
       res.json({
         // recette: data,
         recette: {

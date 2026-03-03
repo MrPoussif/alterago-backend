@@ -3,46 +3,62 @@ var router = express.Router();
 
 const fetch = require("node-fetch");
 
-const my_FOURSQUARE_API_Key = process.env.my_FOURSQUARE_API_Key;
+const my_GOOGLE_PLACES_API_Key = process.env.my_GOOGLE_PLACES_API_Key;
 
-// exemple THUNDERCLIENT GET /events/nearby?lat=48.8566&lng=2.3522&radius=1500&query=coffee&limit=10
+router.post("/nearby", async (req, res) => {
+  const { latitude, longitude } = req.body;
 
-router.get("/nearby", async (req, res) => {
   try {
-    const { lat, lng, radius = 1500, query = "", limit = 20 } = req.query;
-    if (!lat || !lng) {
-      return res.status(400).json({ error: "lat et lng sont requis" });
-    }
-    const url = new URL("https://places-api.foursquare.com/places/search");
-    url.searchParams.set("ll", `${lat},${lng}`);
-    url.searchParams.set("radius", String(radius));
-    url.searchParams.set("limit", String(limit));
-    if (query) url.searchParams.set("query", String(query));
-    const r = await fetch(url.toString(), {
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${my_FOURSQUARE_API_Key}`,
-        "X-Places-Api-Version": "2025-06-17", // <-- IMPORTANT
+    const response = await fetch(
+      "https://places.googleapis.com/v1/places:searchNearby",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": my_GOOGLE_PLACES_API_Key,
+          "X-Goog-FieldMask":
+            "places.displayName.text,places.formattedAddress,places.nationalPhoneNumber,places.regularOpeningHours.weekdayDescriptions,places.rating,places.primaryType",
+        },
+        body: JSON.stringify({
+          includedTypes: [
+            "bakery",
+            "restaurant",
+            "pharmacy",
+            "book_store",
+            "hospital",
+            "doctor",
+            "dentist",
+            "pharmacy",
+            "museum",
+            "movie_theater",
+            "park",
+            "zoo",
+            "aquarium",
+            "art_gallery",
+            "gas_station",
+            "parking",
+            "bank",
+            "post_office",
+            "police",
+          ],
+          // maxResultCount: 10,
+          locationRestriction: {
+            circle: {
+              center: {
+                latitude: latitude,
+                longitude: longitude,
+              },
+              radius: 1500,
+            },
+          },
+        }),
       },
-    });
-    if (!r.ok) {
-      return res.status(r.status).send(await r.text());
-    }
-    console.log("data =>", r);
-    // const data = await r.json();
+    );
 
-    // const formatted = data.results.map((place) => ({
-    //   id: place.fsq_id,
-    //   name: place.name,
-    //   address: place.location?.formatted_address,
-    //   category: place.categories?.[0]?.name,
-    // }));
-
-    // res.json(formatted);
-
-    res.json(await r.json());
-  } catch (e) {
-    res.status(500).json({ error: String(e) });
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: "Erreur Google Places" });
   }
 });
 
