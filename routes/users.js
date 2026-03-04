@@ -3,35 +3,42 @@ const router = express.Router();
 
 const User = require("../models/users");
 const { checkBody } = require("../modules/checkBody");
-const uid2 = require("uid2");
-const bcrypt = require("bcrypt");
+// const uid2 = require("uid2");
+// const bcrypt = require("bcrypt");
 
 router.post("/signup", async (req, res) => {
-  if (!checkBody(req.body, ["username", "password", "email"])) {
-    return res.json({ result: false, error: "Missing or empty fields" });
-  }
-
+  //TODO Voir comment ajouter un checkbody, vérifier toutes les infos ou pas ?
+  // if (!checkBody(req.body, ["username", "password", "email"])) {
+  //   return res.json({ result: false, error: "Missing or empty fields" });
+  // }
+  // console.log("COUCOU");
   try {
-    const existingUser = await User.findOne({ username: req.body.username });
+    const existingUser = await User.findOne({ userId: req.userId });
 
     if (existingUser) {
+      console.log("User already exists");
       return res.json({ result: false, error: "User already exists" });
     }
 
-    const hash = bcrypt.hashSync(req.body.password, 10);
-    const newToken = uid2(32);
-
+    // const hash = bcrypt.hashSync(req.body.password, 10);
+    // const newToken = uid2(32);
     const newUser = new User({
-      username: req.body.username,
-      password: hash,
-      email: req.body.email,
-      token: newToken,
-      canBookmark: true,
+      userId: req.userId,
+      nickname: req.body.nickname,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      age: req.body.age,
+      gender: req.body.gender,
+      picture: req.body.picture,
+      // password: hash,
+      // email: req.body.email,
+      // token: newToken,
+      // canBookmark: true,
     });
 
     const savedUser = await newUser.save();
-
-    res.json({ result: true, token: savedUser.token });
+    console.log(savedUser);
+    res.json({ result: true, message: "New user saved" });
   } catch (error) {
     res.json({ result: false, error: "Server error" });
   }

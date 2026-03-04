@@ -1,16 +1,17 @@
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-  email: String,
-  password: String,
+  // email: String,
+  // password: String,
+  userId: String,
   nickname: String,
   firstname: String,
   lastname: String,
   age: Number,
-  sexe: String,
+  gender: String,
   picture: String,
-  token: String,
-  canBookmark: Boolean,
+  // token: String,
+  // canBookmark: Boolean,
   friends: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
   challenges: { type: mongoose.Schema.Types.ObjectId, ref: "challenges" },
 });
