@@ -7,13 +7,24 @@ const { checkBody } = require("../modules/checkBody");
 // const bcrypt = require("bcrypt");
 
 router.post("/signup", async (req, res) => {
-  //TODO Voir comment ajouter un checkbody, vérifier toutes les infos ou pas ?
-  // if (!checkBody(req.body, ["username", "password", "email"])) {
-  //   return res.json({ result: false, error: "Missing or empty fields" });
-  // }
-  // console.log("COUCOU");
+  if (
+    !checkBody(req.body, [
+      // "email",
+      // "password",
+      "nickname",
+      "firstname",
+      "lastname",
+      "age",
+      "sexe",
+    ])
+  ) {
+    return res.json({ result: false, error: "Missing or empty fields" });
+  }
+
   try {
-    const existingUser = await User.findOne({ userId: req.userId });
+    const existingUser = await User.findOne({
+      $or: [{ email: req.body.email }, { nickname: req.body.nickname }],
+    });
 
     if (existingUser) {
       console.log("User already exists");
@@ -40,23 +51,117 @@ router.post("/signup", async (req, res) => {
     console.log(savedUser);
     res.json({ result: true, message: "New user saved" });
   } catch (error) {
-    res.json({ result: false, error: "Server error" });
+    res.json({ result: false, error: error.message });
   }
 });
-
+//! Plus nécessaire mais à vérifier
 router.post("/signin", async (req, res) => {
-  if (!checkBody(req.body, ["username", "password"])) {
+  if (!checkBody(req.body, ["email", "password"])) {
     return res.json({ result: false, error: "Missing or empty fields" });
   }
 
   try {
-    const user = await User.findOne({ username: req.body.username });
+    const user = await User.findOne({ email: req.body.email });
 
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
       res.json({ result: true, token: user.token });
     } else {
       res.json({ result: false, error: "User not found or wrong password" });
     }
+  } catch (error) {
+    res.json({ result: false, error: "Server error" });
+  }
+});
+//! modifier pour implémenter clerk
+router.put("/update", async (req, res) => {
+  if (
+    !checkBody(req.body, [
+      // "token",
+      // "email",
+      // "password",
+      "nickname",
+      "firstname",
+      "lastname",
+      "age",
+      "sexe",
+    ])
+  ) {
+    return res.json({ result: false, error: "Missing required fields" });
+  }
+
+  try {
+    const user = await User.findOne({ token: req.body.token });
+    if (!user) {
+      return res.json({ result: false, error: "User not found" });
+    }
+
+    await User.updateOne(
+      { token: req.body.token },
+      {
+        nickname: req.body.nickname,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        age: req.body.age,
+        sexe: req.body.sexe,
+        picture: req.body.picture,
+      },
+    );
+
+    const updatedUser = await User.findOne({ token: req.body.token }).select(
+      "-_id nickname firstname lastname age sexe picture",
+    );
+
+    res.json({
+      result: true,
+      user: updatedUser,
+    });
+  } catch (error) {
+    res.json({ result: false, error: "Server error" });
+  }
+});
+
+// Passer l'utilisateur en premium
+router.put("/premium", async (req, res) => {
+  if (!checkBody(req.body, ["token"])) {
+    return res.json({ result: false, error: "Missing or empty fields" });
+  }
+
+  try {
+    const user = await User.findOne({ token: req.body.token });
+
+    if (!user) {
+      return res.json({ result: false, error: "User not found" });
+    }
+
+    await User.updateOne({ token: req.body.token }, { isPremium: true });
+
+    res.json({ result: true, message: "User is now premium" });
+  } catch (error) {
+    res.json({ result: false, error: "Server error" });
+  }
+});
+
+// Récupérer le profil de l'utilisateur
+router.get("/:token", async (req, res) => {
+  try {
+    const user = await User.findOne({ token: req.params.token });
+
+    if (!user) {
+      return res.json({ result: false, error: "User not found" });
+    }
+
+    res.json({
+      result: true,
+      user: {
+        nickname: user.nickname,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        age: user.age,
+        sexe: user.sexe,
+        picture: user.picture,
+        isPremium: user.isPremium,
+      },
+    });
   } catch (error) {
     res.json({ result: false, error: "Server error" });
   }

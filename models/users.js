@@ -11,9 +11,8 @@ const userSchema = mongoose.Schema({
   gender: String,
   picture: String,
   // token: String,
-  // canBookmark: Boolean,
-  friends: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-  challenges: { type: mongoose.Schema.Types.ObjectId, ref: "challenges" },
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
+  challenges: [{ type: mongoose.Schema.Types.ObjectId, ref: "challenges" }],
 });
 
 const User = mongoose.model("users", userSchema);

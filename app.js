@@ -5,9 +5,13 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 require("./models/connection");
+
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const { requireAuth } = require("./middlewares/authMiddleware");
+var recettesRouter = require("./routes/recettes");
+var challengesRouter = require("./routes/challenges");
+var eventsRouter = require("./routes/events");
 
 var app = express();
 const cors = require("cors");
@@ -22,5 +26,8 @@ app.use(express.static(path.join(__dirname, "public")));
 //* et vérifier le token donné en header par le front
 app.use("/", requireAuth, indexRouter);
 app.use("/users", usersRouter);
+app.use("/recettes", recettesRouter);
+app.use("/challenges", challengesRouter);
+app.use("/events", eventsRouter);
 
 module.exports = app;
