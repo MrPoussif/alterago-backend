@@ -2,24 +2,27 @@ const express = require("express");
 const router = express.Router();
 
 const User = require("../models/users");
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 const { checkBody } = require("../modules/checkBody");
 // const uid2 = require("uid2");
 // const bcrypt = require("bcrypt");
 
 router.post("/signup", async (req, res) => {
-  if (
-    !checkBody(req.body, [
-      // "email",
-      // "password",
-      "nickname",
-      "firstname",
-      "lastname",
-      "age",
-      "sexe",
-    ])
-  ) {
-    return res.json({ result: false, error: "Missing or empty fields" });
-  }
+  //! REIMPLEMENTER LE CHECKBODY MAIS NE FONCTIONNAIT PLUS
+  // if (
+  //   !checkBody(req.body, [
+  //     // "email",
+  //     // "password",
+  //     "nickname",
+  //     "firstname",
+  //     "lastname",
+  //     "age",
+  //     "gender",
+  //   ])
+  // ) {
+  //   return res.json({ result: false, error: "Missing or empty fields" });
+  // }
 
   try {
     const existingUser = await User.findOne({
@@ -49,11 +52,21 @@ router.post("/signup", async (req, res) => {
 
     const savedUser = await newUser.save();
     console.log(savedUser);
-    res.json({ result: true, message: "New user saved" });
+    res.json({ result: true, error: "New user saved" });
   } catch (error) {
     res.json({ result: false, error: error.message });
   }
 });
+
+//Upload d'une photo sur cloudinary
+router.post("/upload", async (req, res) => {
+  const resultCloudinary = await cloudinary.uploader.upload("./tmp/photo.jpg");
+
+  fs.unlinkSync("./tmp/photo.jpg");
+
+  res.json({ result: true, url: resultCloudinary.secure_url });
+});
+
 //! Plus nécessaire mais à vérifier
 router.post("/signin", async (req, res) => {
   if (!checkBody(req.body, ["email", "password"])) {

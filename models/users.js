@@ -11,8 +11,22 @@ const userSchema = mongoose.Schema({
   gender: String,
   picture: String,
   // token: String,
-  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
-  challenges: [{ type: mongoose.Schema.Types.ObjectId, ref: "challenges" }],
+  friends: {
+    type: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "users", default: null },
+    ],
+    default: [],
+  },
+  challenges: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "challenges",
+        default: null,
+      },
+    ],
+    default: [],
+  },
 });
 
 const User = mongoose.model("users", userSchema);
