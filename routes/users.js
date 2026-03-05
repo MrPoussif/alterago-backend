@@ -5,8 +5,8 @@ const User = require("../models/users");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const { checkBody } = require("../modules/checkBody");
-// const uid2 = require("uid2");
-// const bcrypt = require("bcrypt");
+import { v2 as cloudinary } from "cloudinary";
+import cloudinary from "../config/cloudinary.js";
 
 router.post("/signup", async (req, res) => {
   //! REIMPLEMENTER LE CHECKBODY MAIS NE FONCTIONNAIT PLUS
@@ -59,12 +59,12 @@ router.post("/signup", async (req, res) => {
 });
 
 //Upload d'une photo sur cloudinary
-router.post("/upload", async (req, res) => {
-  const resultCloudinary = await cloudinary.uploader.upload("./tmp/photo.jpg");
-
-  fs.unlinkSync("./tmp/photo.jpg");
-
-  res.json({ result: true, url: resultCloudinary.secure_url });
+router.get("/upload", async (req, res) => {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
 });
 
 //! Plus nécessaire mais à vérifier
