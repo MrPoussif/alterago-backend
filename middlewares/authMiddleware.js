@@ -1,6 +1,6 @@
-import { verifyToken } from "@clerk/backend";
+const { verifyToken } = require("@clerk/backend");
 
-export const requireAuth = async (req, res, next) => {
+const requireAuth = async (req, res, next) => {
   try {
     // *** Vérifier présence du header
     const authHeader = req.headers.authorization;
@@ -24,10 +24,11 @@ export const requireAuth = async (req, res, next) => {
     // *** Récupérer le userId (sub = subject)
     req.userId = payload.sub;
 
-    // 5️⃣ Continuer
     next();
   } catch (error) {
     console.error("Erreur auth :", error);
     return res.status(401).json({ message: "Token invalide" });
   }
 };
+
+module.exports = { requireAuth };

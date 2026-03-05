@@ -5,8 +5,6 @@ const User = require("../models/users");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const { checkBody } = require("../modules/checkBody");
-import { v2 as cloudinary } from "cloudinary";
-import cloudinary from "../config/cloudinary.js";
 
 router.post("/signup", async (req, res) => {
   //! REIMPLEMENTER LE CHECKBODY MAIS NE FONCTIONNAIT PLUS
@@ -34,8 +32,6 @@ router.post("/signup", async (req, res) => {
       return res.json({ result: false, error: "User already exists" });
     }
 
-    // const hash = bcrypt.hashSync(req.body.password, 10);
-    // const newToken = uid2(32);
     const newUser = new User({
       userId: req.userId,
       nickname: req.body.nickname,
@@ -44,10 +40,6 @@ router.post("/signup", async (req, res) => {
       age: req.body.age,
       gender: req.body.gender,
       picture: req.body.picture,
-      // password: hash,
-      // email: req.body.email,
-      // token: newToken,
-      // canBookmark: true,
     });
 
     const savedUser = await newUser.save();
@@ -88,16 +80,7 @@ router.post("/signin", async (req, res) => {
 //! modifier pour implémenter clerk
 router.put("/update", async (req, res) => {
   if (
-    !checkBody(req.body, [
-      // "token",
-      // "email",
-      // "password",
-      "nickname",
-      "firstname",
-      "lastname",
-      "age",
-      "sexe",
-    ])
+    !checkBody(req.body, ["nickname", "firstname", "lastname", "age", "sexe"])
   ) {
     return res.json({ result: false, error: "Missing required fields" });
   }
