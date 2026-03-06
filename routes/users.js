@@ -62,7 +62,7 @@ router.get("/signature", async (req, res) => {
     const signature = cloudinary.utils.api_sign_request(
       {
         timestamp: timestamp,
-        folder: "profile_pictures",
+        folder: "AlterAgo/profile_pictures",
       },
       process.env.CLOUDINARY_API_SECRET,
     );
@@ -72,7 +72,7 @@ router.get("/signature", async (req, res) => {
       signature,
       cloudName: process.env.CLOUDINARY_CLOUD_NAME,
       apiKey: process.env.CLOUDINARY_API_KEY,
-      folder: "profile_pictures",
+      folder: "AlterAgo/profile_pictures",
     });
   } catch (error) {
     res.status(500).json({ error: "Signature generation failed" });
