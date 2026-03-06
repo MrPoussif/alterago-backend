@@ -158,9 +158,9 @@ router.put("/premium", async (req, res) => {
 });
 
 // Récupérer le profil de l'utilisateur
-router.get("/:token", async (req, res) => {
+router.get("/:userId", async (req, res) => {
   try {
-    const user = await User.findOne({ token: req.params.token });
+    const user = await User.findOne({ userId: req.params.userId });
 
     if (!user) {
       return res.json({ result: false, error: "User not found" });
@@ -169,6 +169,7 @@ router.get("/:token", async (req, res) => {
     res.json({
       result: true,
       user: {
+        userId: user.userId,
         nickname: user.nickname,
         firstname: user.firstname,
         lastname: user.lastname,
