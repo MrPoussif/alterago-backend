@@ -62,3 +62,7 @@ typings/
 
 # fichier de test authMiddleware
 middlewares/authMiddleware.test.js
+
+
+/user.test.js
+
