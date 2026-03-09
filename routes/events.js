@@ -69,6 +69,7 @@ router.post("/nearby", async (req, res) => {
       })) || [];
 
     res.json(simplified);
+    console.log("API => ", my_GOOGLE_PLACES_API_Key);
     // res.json(data);
   } catch (error) {
     res.status(500).json({ error: "Erreur Google Places" });
