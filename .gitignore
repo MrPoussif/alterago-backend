@@ -66,3 +66,5 @@ middlewares/authMiddleware.test.js
 
 /user.test.js
 
+# fichier de test eventsRouter
+eventsRouter.test.js

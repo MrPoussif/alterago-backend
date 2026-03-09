@@ -24,8 +24,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 //* Ajout du middleware dans le app.use('/') pour intercepter  les connexions
 //* et vérifier le token donné en header par le front
+<<<<<<< HEAD
+app.use("/", indexRouter);
+=======
 // app.use("/", indexRouter);
 app.use("/", requireAuth, indexRouter);
+>>>>>>> c8a59026e80903a0de07f65c56d916b5e7024a8d
 app.use("/users", usersRouter);
 app.use("/recettes", recettesRouter);
 app.use("/challenges", challengesRouter);
