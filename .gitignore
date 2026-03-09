@@ -61,7 +61,7 @@ typings/
 .next
 
 # fichier de test authMiddleware
-middlewares/authMiddleware.test.js
+authMiddleware.test.js
 
 # fichier de test eventsRouter
 eventsRouter.test.js
