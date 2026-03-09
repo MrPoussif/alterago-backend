@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-  // email: String,
-  // password: String,
   userId: String,
   nickname: String,
   firstname: String,
@@ -10,7 +8,6 @@ const userSchema = mongoose.Schema({
   age: Number,
   gender: String,
   picture: String,
-  // token: String,
   friends: {
     type: [
       { type: mongoose.Schema.Types.ObjectId, ref: "users", default: null },

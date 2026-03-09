@@ -50,13 +50,33 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-//Upload d'une photo sur cloudinary
-router.get("/upload", async (req, res) => {
+//Récupération signature cloudinary pour uploader une image
+router.get("/signature", async (req, res) => {
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
   });
+  try {
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const signature = cloudinary.utils.api_sign_request(
+      {
+        timestamp: timestamp,
+        folder: "AlterAgo/profile_pictures",
+      },
+      process.env.CLOUDINARY_API_SECRET,
+    );
+
+    res.json({
+      timestamp,
+      signature,
+      cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+      apiKey: process.env.CLOUDINARY_API_KEY,
+      folder: "AlterAgo/profile_pictures",
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Signature generation failed" });
+  }
 });
 
 //! Plus nécessaire mais à vérifier
@@ -138,9 +158,9 @@ router.put("/premium", async (req, res) => {
 });
 
 // Récupérer le profil de l'utilisateur
-router.get("/:token", async (req, res) => {
+router.get("/:userId", async (req, res) => {
   try {
-    const user = await User.findOne({ token: req.params.token });
+    const user = await User.findOne({ userId: req.params.userId });
 
     if (!user) {
       return res.json({ result: false, error: "User not found" });
@@ -149,6 +169,7 @@ router.get("/:token", async (req, res) => {
     res.json({
       result: true,
       user: {
+        userId: user.userId,
         nickname: user.nickname,
         firstname: user.firstname,
         lastname: user.lastname,
