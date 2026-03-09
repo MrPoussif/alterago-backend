@@ -24,7 +24,7 @@ router.post("/signup", async (req, res) => {
 
   try {
     const existingUser = await User.findOne({
-      $or: [{ email: req.body.email }, { nickname: req.body.nickname }],
+      $or: [{ userId: req.body.userId }],
     });
 
     if (existingUser) {
@@ -33,7 +33,7 @@ router.post("/signup", async (req, res) => {
     }
 
     const newUser = new User({
-      userId: req.userId,
+      userId: req.body.userId,
       nickname: req.body.nickname,
       firstname: req.body.firstname,
       lastname: req.body.lastname,
