@@ -184,4 +184,18 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+// Récupérer tous les utilisateurs (pour le SocialScreen)
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find();
+
+    res.json({
+      result: true,
+      users: users,
+    });
+  } catch (error) {
+    res.json({ result: false, error: "Server error" });
+  }
+});
+
 module.exports = router;
