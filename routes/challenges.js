@@ -14,12 +14,9 @@ router.post("/", async (req, res) => {
     const newChallenge = new Challenge({
       name: req.body.name,
       objectif: req.body.objectif,
-
       users: req.body.users,
     });
-
     const savedChallenge = await newChallenge.save();
-
     res.json({ result: true, challenge: savedChallenge });
   } catch (error) {
     res.json({ result: false, error: "Server error" });
