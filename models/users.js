@@ -8,6 +8,8 @@ const userSchema = mongoose.Schema({
   age: Number,
   gender: String,
   picture: String,
+  level: Number,
+  experience: Number,
   friends: {
     type: [
       { type: mongoose.Schema.Types.ObjectId, ref: "users", default: null },
