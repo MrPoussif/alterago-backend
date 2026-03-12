@@ -23,9 +23,7 @@ router.post("/signup", async (req, res) => {
   // }
 
   try {
-    const existingUser = await User.findOne({
-      $or: [{ email: req.body.email }, { nickname: req.body.nickname }],
-    });
+    const existingUser = await User.findOne({ nickname: req.body.nickname });
 
     if (existingUser) {
       console.log("User already exists");
@@ -43,7 +41,7 @@ router.post("/signup", async (req, res) => {
     });
 
     const savedUser = await newUser.save();
-    console.log(savedUser);
+    console.log("body reçu =>", req.body);
     res.json({ result: true, error: "New user saved" });
   } catch (error) {
     res.json({ result: false, error: error.message });

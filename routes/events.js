@@ -34,9 +34,8 @@ router.post("/nearby", async (req, res) => {
         headers: {
           "Content-Type": "application/json",
           "X-Goog-Api-Key": my_GOOGLE_PLACES_API_Key,
-          "X-Goog-FieldMask":
-            // "places.displayName.text,places.formattedAddress,places.nationalPhoneNumber,places.regularOpeningHours.weekdayDescriptions,places.rating,places.primaryType",
-            "places",
+          "X-Goog-FieldMask": "places",
+          "Accept-Language": "fr",
         },
         body: JSON.stringify({
           includedTypes,
