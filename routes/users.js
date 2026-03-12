@@ -7,6 +7,8 @@ const fs = require("fs");
 const { checkBody } = require("../modules/checkBody");
 
 router.post("/signup", async (req, res) => {
+  console.log("pouet", req.body);
+
   //! REIMPLEMENTER LE CHECKBODY MAIS NE FONCTIONNAIT PLUS
   // if (
   //   !checkBody(req.body, [
@@ -24,6 +26,10 @@ router.post("/signup", async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ nickname: req.body.nickname });
+<<<<<<< HEAD
+=======
+    console.log("C'est le user ou quoi la =>", existingUser);
+>>>>>>> 257bed917ff6aa1af7e9d049003312ac2f9728aa
 
     if (existingUser) {
       console.log("User already exists");
@@ -31,7 +37,7 @@ router.post("/signup", async (req, res) => {
     }
 
     const newUser = new User({
-      userId: req.userId,
+      userId: req.body.userId,
       nickname: req.body.nickname,
       firstname: req.body.firstname,
       lastname: req.body.lastname,
